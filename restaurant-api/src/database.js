@@ -10,14 +10,14 @@ const mysql = require('mysql');
 
 }); */
 
-const mysqlConnection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
+const mysqlConnection = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 
-mysqlConnection.connect(function (err) {
+/* mysqlConnection.connect(function (err) {
     if (err) {
         console.log(err);
         return;
     } else {
         console.log('Conexión Exitosa');
     }
-});
+}); */
 module.exports = mysqlConnection;

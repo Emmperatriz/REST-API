@@ -2,11 +2,21 @@ const { Router } = require('express');
 const express = require('express');
 const router = express.Router();
 
-const mysqlConnection = require('../database');
+const mysqlConnectionPool = require('../database');
+function query(query, callback){
+    mysqlConnectionPool.getConnection(function(err,conn){
+        if(err){
+            console.log(err);
+            return;
+
+        }
+        conn.query(query, callback);
+    });
+}
 
 //GET  OBTENER DATOS 
 router.get('/', (req, res) => {
-    mysqlConnection.query('SELECT * FROM Restaurants', (err, rows, fields) => { //Obtiene toda la información de la tabla
+    query('SELECT * FROM Restaurants', (err, rows, fields) => { //Obtiene toda la información de la tabla
         if (!err) {
             res.json(rows);
         } else {
@@ -18,7 +28,7 @@ router.get('/', (req, res) => {
 //GET  OBTENER DATOS /id
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    mysqlConnection.query('SELECT * FROM Restaurants WHERE id = ?', [id], (err,
+    query('SELECT * FROM Restaurants WHERE id = ?', [id], (err,
         rows, fields) => {
         if (!err) {
             res.json(rows[0]);
@@ -34,7 +44,7 @@ router.post('/', (req, res) => {
 
     const { id, rating, namer, site, email, phone, street, city, state, lat, lng } = req.body;
 
-    mysqlConnection.query('INSERT INTO Restaurants  (id, rating, namer, site, email, phone, street, city, state, lat, lng) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)', [id, rating, namer, site, email, phone, street, city, state, lat, lng], (err, rows, fields) => {
+    query('INSERT INTO Restaurants  (id, rating, namer, site, email, phone, street, city, state, lat, lng) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)', [id, rating, namer, site, email, phone, street, city, state, lat, lng], (err, rows, fields) => {
         if (!err) {
             res.json({ Status: 'Registro Exitoso' });
         } else {
@@ -49,7 +59,7 @@ router.put('/:id', (req, res) => {
 
     const { id, rating, namer, site, email, phone, street, city, state, lat, lng } = req.body;
 
-    mysqlConnection.query('UPDATE Restaurants SET id = ?, rating = ?, namer = ?, site = ?, email = ?, phone = ?, street = ?, city = ?, state = ?, lat = ?, lng = ? WHERE id = ?', [id, rating, namer, site, email, phone, street, city, state, lat, lng, id],
+    query('UPDATE Restaurants SET id = ?, rating = ?, namer = ?, site = ?, email = ?, phone = ?, street = ?, city = ?, state = ?, lat = ?, lng = ? WHERE id = ?', [id, rating, namer, site, email, phone, street, city, state, lat, lng, id],
         (err, rows, fields) => {
             if (!err) {
                 res.json({ Status: 'Actualización Exitosa' });
@@ -65,7 +75,7 @@ router.delete('/:id', (req, res) => {
     const { id } = req.params; 
 
 
-    mysqlConnection.query('DELETE FROM Restaurants WHERE id = ?', [id], (err, rows, fields) => {
+    query('DELETE FROM Restaurants WHERE id = ?', [id], (err, rows, fields) => {
         if (!err) {
             res.json({ Status: 'Registro Eliminado' });
         } else {
