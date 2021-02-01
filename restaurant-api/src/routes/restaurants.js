@@ -3,14 +3,14 @@ const express = require('express');
 const router = express.Router();
 
 const mysqlConnectionPool = require('../database');
-function query(query, callback){
+function query(query, args,callback){
     mysqlConnectionPool.getConnection(function(err,conn){
         if(err){
             console.log(err);
             return;
 
         }
-        conn.query(query, callback);
+        conn.query(query, args, callback);
     });
 }
 
@@ -47,6 +47,7 @@ router.post('/', (req, res) => {
     query('INSERT INTO Restaurants  (id, rating, namer, site, email, phone, street, city, state, lat, lng) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)', [id, rating, namer, site, email, phone, street, city, state, lat, lng], (err, rows, fields) => {
         if (!err) {
             res.json({ Status: 'Registro Exitoso' });
+            console.log(err);
         } else {
             console.log(err);
         }
