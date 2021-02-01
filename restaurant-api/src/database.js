@@ -1,4 +1,4 @@
-//Conexion a la base de datos mysql
+//DATABASE CONECTION
 const mysql = require('mysql');
 
 const mysqlConnection = mysql.createConnection({
@@ -10,12 +10,12 @@ const mysqlConnection = mysql.createConnection({
 
 });
 
-mysqlConnection.connect(function (err){
- if(err){
-     console.log(err);
-     return;
- } else {
-     console.log('Conexión Exitosa');
- }
+mysqlConnection.connect(function (err) {
+    if (err) {
+        console.log(err);
+        return;
+    } else {
+        console.log('Conexión Exitosa');
+    }
 });
 module.exports = mysqlConnection;

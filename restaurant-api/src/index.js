@@ -1,15 +1,16 @@
 const express = require('express');
 const app = express();
 
-//Configuración del Servidor
-app.set('port', process.env.PORT || 3000); //process.env.PORT-> En caso de que algun SO nos de un puerto para trabajar.
+//SEETTING SERVER
+app.set('port', process.env.PORT || 3000);
 
-//Middelwares
+//JSON
+app.use(express.json()); 
 
-app.use(express.json()); //Acceder a los archivos JSON
-//Rutas
+//ROUTES
 app.use(require('./routes/restaurants'));
-//Inicializando el Servidor
+
+//SERVER
 app.listen(app.get('port'), () => {
-    console.log('Servidor en el puerto ', app.get('port'));
+    console.log('Server on port ', app.get('port'));
 });
